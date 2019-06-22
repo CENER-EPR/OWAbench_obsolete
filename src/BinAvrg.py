@@ -15,39 +15,27 @@ from IPython.display import Markdown
 import xarray as xr
 from matplotlib import ticker as mtick
     
-def plot_wf_layout(x,y,labels = [], figsize=(8,8),data = [],vmin = np.nan,vmax = np.nan):
-    fig= plt.figure(figsize=figsize)
-    
-    #1D data - make a single plot
-    #if len(data.shape) == 1:
-    #main plot
+def plot_wf_layout(x,y,labels = [], figsize=(12,6),data = [],vmin = np.nan,vmax = np.nan):
     if len(data)==0:
+        fig, ax = plt.subplots(figsize=figsize)
         plt.scatter(x,y)
+        #labeled wind turbines    
+        for i in range(len(labels)):
+            plt.text(x[i]+0.4, y[i]+0.4, labels[i][3:], fontsize=9) #the labels prefix is removed
+        ax.set_aspect(1.0)
     else:
-        if np.isnan(vmax):
-            vmax = np.nanmax(data)
-        if np.isnan(vmin):
-            vmin = np.nanmin(data)
+        fig,ax = plt.subplots(1, 2, figsize=figsize)
+        for iax in range(len(data)):
+            if vmin[iax]<0:
+                cmap=plt.cm.get_cmap('bwr',16)
+                ax[iax].set_title('BIAS[%]')
+            else:
+                cmap=plt.cm.get_cmap('jet',10)
+                ax[iax].set_title('Array Eff.[%]')
+            sc = ax[iax].scatter(x,y,marker='o',c=data[iax],cmap=cmap,edgecolors ='k',vmin=vmin[iax], vmax=vmax[iax])
+            plt.colorbar(sc,ax=ax[iax])
+            ax[iax].set_aspect(1.0)
         
-        # blue white red plot centered on white
-        if vmin<0:
-            vmax = max(vmax,-vmin)
-            vmin = -vmax
-            cmap=plt.cm.get_cmap('bwr', 15)
-            sc = plt.scatter(x,y,marker='o',c=data,cmap=cmap,edgecolors ='k')
-        else:# jet plot
-            cmap=plt.cm.get_cmap('jet', 14)
-            sc = plt.scatter(x,y,c=data,cmap=cmap)
-        
-        plt.colorbar(sc)
-        plt.clim(vmin, vmax);
-
-    #labeled wind turbines    
-    for i in range(len(labels)):
-        plt.text(x[i]+0.4, y[i]+0.4, labels[i][3:], fontsize=9) #the labels prefix is removed
-    #else: #2D data - make multiplot
-    # TODO
-    plt.axis('scaled')
     plt.show()
 
 def plot_transect(data,ref_data,meso_data,wt_list,turbines,rot_d,sim_name,WDbin,zLbin):

@@ -1,3 +1,9 @@
+This repository is obsolete 
+---------------------------
+
+See https://github.com/CENER-EPR/OWAbench for the up to date version.
+=====================================================================
+
 OWA-Anholt Array Efficiency Benchmark
 -------------------------------------
 `Javier Sanz Rodrigo <mailto:jsrodrigo@cener.com>`_, `Pawel Gancarski <mailto:pgancarski@cener.com>`_
